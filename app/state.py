@@ -5,8 +5,6 @@
 # INITIALIZATION VALUES....
 # -----------------
 
-# maybe add more commentation later
-
 conn = None
 currentUser = -1
 
