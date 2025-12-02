@@ -502,3 +502,53 @@ def updatePersonalDetails():
         conn.rollback()
     finally:
         cur.close()
+
+
+def registerForClass():
+    if state.currentUser == -1:
+        print("You must log in first to register for classes.")
+        return
+    
+    print("\n|     Member: Register For a Class     |")
+    print("(type 0 at ANY prompt to go back to main menu)\n")
+
+    conn = state.conn
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM available_classes;")
+    ret = cur.fetchall()
+    if len(ret) == 0:
+        print("There are currently no classes available for registration")
+        return
+    
+    while True:
+        classes = []
+        print("Here are all the available classes for registration")
+        print("   | Trainer Name    | Type    | Starting Time       | Ending Time         | Room  | Attendance | Capacity |")
+        for i in range(len(ret)):
+            class_id, name, purpose, start, end, room, attendance, capacity = ret[i]
+            print(f"{i + 1}: | {name:<15} | {purpose:<7} | {start} | {end} | {room:<5} | {attendance:<10} | {capacity:<8} |")
+            classes.append(class_id)
+        
+        while True:
+            try:
+                index = int(input("\nSelect which class you wish to register in: ")) - 1
+                if index < 0:
+                    print("Returning to Main Menu...")
+                    return
+            except ValueError:
+                print("Please use one of the numbers to specify which class you wish to register in")
+                continue
+            break
+        
+        class_id = classes[i]
+        cur.execute("SELECT * FROM class_regs WHERE class_id = %s AND member_id = %s", (class_id, state.currentUser))
+        if cur.fetchone():
+            print("You are already registered for this class")
+            continue
+        break
+    cur.execute("INSERT INTO class_regs (class_id, member_id) VALUES (%s, %s);", (class_id, state.currentUser))
+    cur.execute("UPDATE classes SET attendance = attendance + 1 WHERE class_id = %s", (class_id,))
+
+    print("You have successfully registered for this class, enjoy!")
+    input("Press enter to continue")

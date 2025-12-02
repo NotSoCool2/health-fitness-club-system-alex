@@ -18,12 +18,14 @@ from member import (
 	showDashboard,
 	updatePersonalDetails,
 	manageGoals,
+	registerForClass
 )
 from trainer import (
 	trainerViewAvail,
 	trainerAddAvail,
 	trainerMemberLookup,
 )
+from admin import createClass
 
 def main():
 	# open DB connection once at startup
@@ -37,20 +39,25 @@ def main():
 			print(f"You are viewing as: {state.currentRole}")
 			print("────────────────────────────────────────────────────────────────────────────")
 			print("Choose from the options below.")
+			print("        0: Exit")
 			print("        1: Reset Database")
 			print("        2: Login")
 			print("        3: Register a Member")
+			print("\n        Member Exclusive Functions")
 			print("        4: Get Metric History")
 			print("        5: Get Current Metrics")
 			print("        6: Update Metrics")
 			print("        7: Show My Active Dashboard")
 			print("        8: Profile Management")
 			print("        9: Member Goal Manager")
-			print("        10: Get Training Now | View Availability from Trainers")
-			print("        11: Trainer Access ONLY -> Add Availability")
-			print("        12: Trainer Access ONLY -> Member Lookup")
-			print("        0: Exit")
-			option = input("Type your option as a number: \n")
+			print("        10: View Availability from Trainers")
+			print("        11: Register For A Class")
+			print("\n        Trainer Exclusive Functions")
+			print("        12: Add Availability")
+			print("        13: Member Lookup")
+			print("\n        Admin Exclusive Functions")
+			print("        14: Create Class")
+			option = input("Type your option as a number: ")
 			try:
 				option = int(option)
 			except Exception:
@@ -101,9 +108,13 @@ def main():
 						continue
 					trainerViewAvail()
 				case 11:
-					trainerAddAvail()
+					registerForClass()
 				case 12:
+					trainerAddAvail()
+				case 13:
 					trainerMemberLookup()
+				case 14:
+					createClass()
 				case _:
 					print("\nInvalid option, try again\n")
 	finally:

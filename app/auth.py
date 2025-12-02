@@ -37,7 +37,7 @@ def login(email: str, password: str):
             print(f"Successful MEMBER login: {fname} {lname} (Member ID {member_id})")
             return
 
-        # b) try as trainer or admin login
+        # b) try as trainer
         cur.execute(
             "SELECT trainer_id, fname, lname, email FROM trainers WHERE email = %s AND password = %s;",
             (email, password)
@@ -47,12 +47,22 @@ def login(email: str, password: str):
             trainer_id, fname, lname, trainer_email = row
             state.currentUser = -1  # show that it is not logged in as a member
             state.currentStaffId = int(trainer_id)
-            if trainer_email.lower() == "gloria.li@healthnfitness.com":
-                state.currentRole = "Admin"
-                print(f"Successful ADMIN login: {fname} {lname} (Trainer ID {trainer_id})")
-            else:
-                state.currentRole = "Trainer"
-                print(f"Successful TRAINER login: {fname} {lname} (Trainer ID {trainer_id})")
+            state.currentRole = "Trainer"
+            print(f"Successful TRAINER login: {fname} {lname} (Trainer ID {trainer_id})")
+            return
+
+        # c) try as admin
+        cur.execute(
+            "SELECT admin_id FROM admins WHERE email = %s AND password = %s;",
+            (email, password)
+        )
+        row = cur.fetchone()
+        if row != None:
+            admin_id = row[0]
+            state.currentUser = -1
+            state.currentStaffId = -1
+            state.currentRole = "Admin"
+            print(f"Successful ADMIN login: (Admin ID {admin_id})")
             return
 
         # if user is still guest

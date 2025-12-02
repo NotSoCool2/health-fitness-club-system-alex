@@ -1,6 +1,6 @@
 # trainer.py
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import state
 
 # listAllTrainers(), showTrainerAvailability(), trainerViewAvail(),
@@ -320,7 +320,7 @@ def trainerAddAvail():
             if end_time_str == "0":
                 print("Returning to Main Menu...")
                 return
-
+            
             # combine to time strings
             start_str = f"{date_str} {start_time_str}"
             end_str   = f"{date_str} {end_time_str}"
@@ -344,7 +344,11 @@ def trainerAddAvail():
 
             # end after start (one of the CHECKS)
             if end_dt <= start_dt:
-                print("\nSession end time must be AFTER start time. Try again.\n")
+                print("\nAvailability end time must be AFTER start time. Try again.\n")
+                continue
+            
+            if start_dt - end_dt < timedelta(hours = 1):
+                print("\nAvailability times must be longer than 1 hour\n")
                 continue
 
             # business hours

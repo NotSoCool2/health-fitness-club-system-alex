@@ -124,3 +124,27 @@ INSERT INTO trainer_availability (trainer_id, start_time, end_time) VALUES
     (SELECT trainer_id FROM trainers WHERE email = 'gloria.li@healthnfitness.com'),
     '2025-12-03 15:00:00', '2025-12-03 17:00:00'
 );
+
+INSERT INTO admins (email, password) VALUES ('admin@gmail.com', 'administrator');
+
+-- *-----------------------------
+-- ROOMS
+-- *-----------------------------
+
+INSERT INTO rooms (room_name, max_capacity) VALUES
+('101A', 25),
+('101B', 35),
+('102A', 5),
+('102B', 10);
+
+-- *-----------------------------
+-- CLASSES
+-- *-----------------------------
+
+INSERT INTO room_bookings (room_id, start_time, end_time, purpose) VALUES
+(1, '2025-12-05 13:00:00', '2025-12-05 14:30:00', 'group'),
+(2, '2025-12-05 17:00:00', '2025-12-05 19:00:00', 'private');
+
+INSERT INTO classes (booking_id, trainer_id) VALUES
+(1, (SELECT trainer_id FROM trainers WHERE email = 'gloria.li@healthnfitness.com')),
+(2, (SELECT trainer_id FROM trainers WHERE email = 'alex.hylton@healthnfitness.com'));
